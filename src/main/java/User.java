@@ -17,6 +17,20 @@ public class User {
     @Column(name = "created_ad", nullable = false)
     private LocalDateTime createdAt;
 
+    public User(long id, String name, String email, int age, LocalDateTime createdAt) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.createdAt = createdAt;
+    }
+
+    public User(String name, String email, int age) {
+        this.name = name;
+        this.email = email;
+        this.age = age;
+    }
+
     public long getId() {
         return id;
     }
@@ -55,5 +69,16 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }
