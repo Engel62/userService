@@ -7,28 +7,28 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(name = "name", nullable = false)
+    private Long id;
+
+    @Column(nullable = false)
     private String name;
-    @Column(name = "email", nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String email;
-    @Column(name = "age", nullable = false)
+
+    @Column(nullable = false)
     private int age;
-    @Column(name = "created_ad", nullable = false)
+
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public User(long id, String name, String email, int age, LocalDateTime createdAt) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.age = age;
-        this.createdAt = createdAt;
+    public User() {
     }
 
     public User(String name, String email, int age) {
         this.name = name;
         this.email = email;
         this.age = age;
+        this.createdAt = LocalDateTime.now();
     }
 
     public long getId() {
@@ -39,20 +39,20 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getAge() {
@@ -73,12 +73,11 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", age=" + age +
-                ", createdAt=" + createdAt +
-                '}';
+        return "Пользователь :" +
+                "id " + id +
+                ", Имя ='" + name + '\'' +
+                ", email = '" + email + '\'' +
+                ", возраст = " + age +
+                ", Создан = " + createdAt;
     }
 }
