@@ -5,63 +5,72 @@ import util.HibernateUtil;
 
 import java.util.List;
 
-public class UserDaoImpl implements UserDAO {
+public class UserDaoImpl implements UserDAO{
     @Override
     public void save(User user) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
             transaction = session.beginTransaction();
-            session.persist(user);
+            session.persist(user); // Используем persist вместо save
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             throw e;
+        } finally {
+            session.close(); // Закрываем сессию вручную
         }
     }
 
     @Override
     public User findById(Long id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
             return session.get(User.class, id);
+        } finally {
+            session.close();
         }
     }
 
     @Override
     public List<User> findAll() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from User", User.class).list();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            return session.createQuery("FROM User", User.class).getResultList();
+        } finally {
+            session.close();
         }
     }
 
     @Override
     public void update(User user) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
             transaction = session.beginTransaction();
-            session.merge(user);
+            session.merge(user); // merge вместо update
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             throw e;
+        } finally {
+            session.close();
         }
     }
 
     @Override
     public void delete(User user) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
             transaction = session.beginTransaction();
-            session.remove(user);
+            session.delete(session.contains(user) ? user : session.merge(user));
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             throw e;
+        } finally {
+            session.close();
         }
     }
 }

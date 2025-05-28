@@ -24,9 +24,7 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="b14fa843-d246-45e2-8016-2a28a1ff357b" object-ref="consoles/Connection" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="b14fa843-d246-45e2-8016-2a28a1ff357b" />
@@ -54,7 +52,7 @@
           <description value="" />
           <database-type value="POSTGRES" />
           <config-type value="BASIC" />
-          <database-version value="14.7" />
+          <database-version value="16.2" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
