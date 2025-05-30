@@ -7,7 +7,7 @@ import java.util.List;
 
 public class UserDaoImpl implements UserDAO{
     @Override
-    public void save(User user) {
+    public User save(User user) {
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
@@ -20,6 +20,7 @@ public class UserDaoImpl implements UserDAO{
         } finally {
             session.close(); // Закрываем сессию вручную
         }
+        return user;
     }
 
     @Override
