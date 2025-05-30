@@ -27,6 +27,7 @@
       <artifactId>hibernate-core</artifactId>
       <version>6.6.13.Final</version>
     </dependency>
+
     <!-- Logging -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>

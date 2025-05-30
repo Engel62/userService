@@ -1,31 +1,34 @@
 package util;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
+
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
     private static final SessionFactory sessionFactory = buildSessionFactory();
 
     private static SessionFactory buildSessionFactory() {
         try {
-            StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
-                    .configure("hibernate.cfg.xml")
+            Configuration configuration = new Configuration().configure();
+
+            // Переопределяем настройки из системных свойств
+            if (System.getProperty("db.url") != null) {
+                configuration.setProperty("hibernate.connection.url", System.getProperty("db.url"));
+                configuration.setProperty("hibernate.connection.username", System.getProperty("db.username"));
+                configuration.setProperty("hibernate.connection.password", System.getProperty("db.password"));
+            }
+
+            StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties())
                     .build();
 
-            Metadata metadata = new MetadataSources(standardRegistry)
-                    .getMetadataBuilder()
-                    .build();
-
-            return metadata.getSessionFactoryBuilder().build();
+            return configuration.buildSessionFactory(registry);
         } catch (Exception ex) {
-            System.err.println("Initial SessionFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
-
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
