@@ -1,3 +1,4 @@
+import model.User;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -39,7 +40,7 @@ public class UserDaoIntegrationTest {
     void cleanDatabase() {
         try (var session = HibernateUtil.getSessionFactory().openSession()) {
             var transaction = session.beginTransaction();
-            session.createQuery("DELETE FROM User").executeUpdate();
+            session.createQuery("DELETE FROM model.User").executeUpdate();
             transaction.commit();
         }
         }
