@@ -1,4 +1,8 @@
+package service;
+
 import dto.UserDTO;
+import exeption.EmailAlreadyExistsException;
+import exeption.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import mapper.UserMapper;
 import model.User;
@@ -16,7 +20,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     public UserDTO createUser(UserDTO userDTO) {
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
+        if (userRepository.existingByEmail(userDTO.getEmail())) {
             throw new EmailAlreadyExistsException(userDTO.getEmail());
         }
 
@@ -54,37 +58,4 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
-}
-        public void deleteUser(Long id) {
-            if (!userRepository.existsById(id)) {
-                throw new UserNotFoundException(id);
-            }
-            userRepository.deleteById(id);
-        }
-        @Transactional(readOnly = true)
-        public List<UserDTO> getAllUsers() {
-            return userRepository.findAll().stream()
-                    .map(userMapper::toDTO)
-                    .toList();
-        }
-
-        public UserDTO updateUser(Long id, UserDTO userDTO) {
-            User existingUser = userRepository.findById(id)
-                    .orElseThrow(() -> new UserNotFoundException(id));
-
-            userMapper.updateUserFromDTO(userDTO, existingUser);
-            User updatedUser = userRepository.save(existingUser);
-            return userMapper.toDTO(updatedUser);
-        }
-
-        public void deleteUser(Long id) {
-            if (!userRepository.existsById(id)) {
-                throw new UserNotFoundException(id);
-            }
-            userRepository.deleteById(id);
-        }
-
-    }
-
-
 }

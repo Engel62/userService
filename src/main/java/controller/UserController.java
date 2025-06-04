@@ -28,18 +28,18 @@ public class UserController {
 
     @GetMapping
     public List<UserDTO> getAllUsers() {
-        return userService.getUserById();
+        return userService.getAllUsers();
     }
 
     @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
-        return UserService.updateUser(id, userDTO);
+        return userService.updateUser(id, userDTO);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser9(@PathVariable Long id) {
-        userService.getUser();
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 
 
