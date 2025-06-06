@@ -29,6 +29,9 @@
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="b14fa843-d246-45e2-8016-2a28a1ff357b" />
   </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="b14fa843-d246-45e2-8016-2a28a1ff357b" dataset="public.users" active-filter-id="" />
+  </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
   </component>
@@ -52,7 +55,7 @@
           <description value="" />
           <database-type value="POSTGRES" />
           <config-type value="BASIC" />
-          <database-version value="16.2" />
+          <database-version value="14.7" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
