@@ -1,4 +1,40 @@
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    topic:
+      name: user-events
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3 # Количество попыток повторной отправки
+
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.example.userservice.dto" # Для десериализации DTO
+
+
+  mail:
+    host: smtp.example.com # Замените на реальный SMTP-сервер
+    port: 587
+    username: your-email@example.com
+    password: your-email-password
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connection timeout: 5000
+          timeout: 5000
+          write timeout: 5000
+
+
   datasource:
     url: jdbc:postgresql://localhost:5432/user_db
     username: postgres
@@ -8,3 +44,5 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate.format_sql: true
