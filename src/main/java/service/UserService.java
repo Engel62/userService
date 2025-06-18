@@ -2,8 +2,8 @@ package service;
 
 import dto.UserDTO;
 import dto.UserEvent;
-import exeption.EmailAlreadyExistsException;
-import exeption.UserNotFoundException;
+import exception.EmailAlreadyExistsException;
+import exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mapper.UserMapper;
@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static dto.UserEvent.EventType.CREATED;
 import static dto.UserEvent.EventType.DELETED;
-
 
 @Service
 @RequiredArgsConstructor
@@ -34,11 +34,15 @@ public class UserService {
 
     @Transactional
     public UserDTO createUser(UserDTO userDTO) {
+        if (userRepository.existingByEmail(userDTO.getEmail())) {
+            throw new EmailAlreadyExistsException(userDTO.getEmail());
+        }
+
         User user = userMapper.toEntity(userDTO);
         user = userRepository.save(user);
 
         sendUserEvent(user.getEmail(), CREATED);
-        log.info("Created user with email: {}", user.getEmail());
+        log.info("Created user with id: {}, email: {}", user.getId(), user.getEmail());
 
         return userMapper.toDTO(user);
     }
@@ -47,6 +51,12 @@ public class UserService {
     public UserDTO updateUser(Long id, UserDTO userDTO) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (!existingUser.getEmail().equals(userDTO.getEmail())) {
+            if (userRepository.existingByEmail(userDTO.getEmail())) {
+                throw new EmailAlreadyExistsException(userDTO.getEmail());
+            }
+        }
 
         userMapper.updateUserFromDTO(userDTO, existingUser);
         User updatedUser = userRepository.save(existingUser);
@@ -69,13 +79,29 @@ public class UserService {
                 .map(userMapper::toDTO)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 
     private void sendUserEvent(String email, UserEvent.EventType eventType) {
         UserEvent event = new UserEvent(email, eventType);
+
         kafkaTemplate.send(kafkaTopic, email, event)
-                .addCallback(
-                        result -> log.debug("Sent event: {}", event),
-                        ex -> log.error("Failed to send event: {}", event, ex)
-                );
+                .whenComplete((result, ex) -> {
+                    if (ex != null) {
+                        log.error("Failed to send event for email: {}", email, ex);
+                    } else {
+                        log.info("Sent to partition {} with offset {}",
+                                result.getRecordMetadata().partition(),
+                                result.getRecordMetadata().offset());
+                    }
+                });
     }
-    }
+}
+
+
+
+

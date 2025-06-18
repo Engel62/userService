@@ -1,4 +1,4 @@
-package exeption;
+package exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +7,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFound(UserNotFoundException ex) {
@@ -53,4 +55,3 @@ public class GlobalExceptionHandler {
         }
     }
 }
-
