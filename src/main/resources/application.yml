@@ -1,4 +1,5 @@
 spring:
+
   datasource:
     url: jdbc:postgresql://localhost:5432/user_db
     username: postgres
@@ -8,3 +9,4 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
