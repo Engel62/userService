@@ -1,4 +1,3 @@
-import application.UserServiceApplication;
 import controller.UserController;
 import dto.UserDTO;
 import org.junit.jupiter.api.Test;

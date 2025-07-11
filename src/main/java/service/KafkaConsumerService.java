@@ -28,6 +28,6 @@ public class KafkaConsumerService {
             context.setVariable("message", "Ваш аккаунт был удалён");
         }
 
-        emailService.sendEmail(event.email(), subject, template, context);
+        emailService.sendEmail(event.email(), subject, template);
     }
 }
